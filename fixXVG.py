@@ -96,13 +96,15 @@ def CombineXVG(input1, input2, output):
         returns lines that were written to output file
         creates output file with combined data
     """
+    fix1 = input1.split('.')[0]+'_fixed.xvg'
+    fix2 = input2.split('.')[0]+'_fixed.xvg'
     # clean up the input files
-    removeCorruptLines(input1)
-    removeCorruptLines(input2)
+    removeCorruptLines(input1, outputFN = fix1)
+    removeCorruptLines(input2, outputFN = fix2)
 
     # Read in lines and close file
-    f1 = open(input1)
-    f2 = open(input2)
+    f1 = open(fix1)
+    f2 = open(fix2)
     lines1 = f1.readlines()
     lines2 = f2.readlines()
     f1.close()
