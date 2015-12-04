@@ -81,56 +81,10 @@ def removeCorruptLines(inputFN, outputFN = None, headerLine = None):
     # fmt assigns the format of the float, for now it is the longest decimal in examples considered
     # header prints the header from the original file to the top of the output
     # comments adds that character to the beginning of ever line in the header
-    np.savetxt(outputFN, data, fmt='%.8f', header = header, comments = '')
+    np.savetxt(outputFN, data, fmt='%.10f', header = header, comments = '')
 
     print "file %s created with corrected data" % outputFN 
-    
-def removeCorruptLines_original(inputFN, outputFN = None):
-    """
-        Original version of this method, not removing until I'm convinced the new one works. 
-    """
-    if outputFN == None:
-        outputFN = inputFN
-    try:
-        inputFile = open(inputFN, 'r')
-    except:
-        fileError = Exception("Input File not found!")
-        raise fileError
-
-    # read in lines from file
-    allLines = inputFile.readlines()
-    inputFile.close()
-
-    # Find where the data starts
-    end, header, dataLines = findDataStart(allLines)
-    newlines = allLines[0:end]
-    
-    length = len(dataLines[0].split(' '))
-    # In each line:
-    for l in dataLines:
-        goodLine = True
-        dataSet = l.split(' ')
-        # if the length is not the same then it is not a good line
-        if len(dataSet) != length:
-            goodLine = False
-        else:    
-            # for each item, if it can't be turned into a float remove that line
-            for s in l.split(' '):
-                try:
-                    float(s)
-                except:
-                    goodLine = False
-                    break 
-        if goodLine:
-            newlines.append(l)
-    
-    # write good lines to output file
-    newFile = open(outputFN,'w')
-    newFile.writelines(newlines)
-    newFile.close()
-
-    return newlines
-
+   
 # CombineXVG takes in two xvg files and combines data from the second one at the end of the first one starting at the last time in the first file
 def CombineXVG(input1, input2, output):
     """
