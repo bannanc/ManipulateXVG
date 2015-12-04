@@ -26,12 +26,13 @@ def findDataStart(lines, delin = ' '):
             continue
     return -1, lines, []
 
-def removeCorruptLines(inputFN, outputFN = None, headerLine = None):
+def removeCorruptLines(inputFN, outputFN = 'output.xvg', headerLine = None):
     """
     This method takes an .xvg file, removes any corrupted lines of data or data lines that are not sufficiently long. 
 
     input:
         inputFN - (String) name of input file
+        outputFN - (optional string) name of output file, default is output.xvg, you can provide the same name as the input file, but it will be over written. 
         outputFN - (optional, String) name of outputfile, will out output a file with the same name as input if not provided
         headerLine - (optional, int) number of lines at the beginning of the file consisting of strings, if None this will be found, if you know there is no header assign header = 0.
         comments = (optional, list of strings) characters that are used to indicate a comment in your file, default is '#' and '@' which are used in GROMACS xvg file headers. 
@@ -45,10 +46,6 @@ def removeCorruptLines(inputFN, outputFN = None, headerLine = None):
         fileError = Exception("Input File not found!")
         raise fileError
     
-    # If no output file name assigned, assign output to input file name
-    if outputFN == None:
-        outputFN = inputFN
-
     # Need header lines for numpy.genfromtxt to work
     # If not provided find it:
     if headerLine == None:
