@@ -27,7 +27,7 @@ def findDataStart(lines, delin = ' '):
             continue
     return -1, lines, []
 
-def removeCorruptLines(inputFN, outputFN = 'output.xvg', headerLine = None, fail = 20.0):
+def removeCorruptLines(inputFN, outputFN = 'output.xvg', headerLine = None, fail = 10.0):
     """
     This method takes an .xvg file, removes any corrupted lines of data or data lines that are not sufficiently long. 
 
@@ -65,7 +65,7 @@ def removeCorruptLines(inputFN, outputFN = 'output.xvg', headerLine = None, fail
         header = lines[0:headerLine]
         # Make header lines into string
         header = ''.join(header)
-
+        
     else: # headerLine == 0:
         header = '' # This is default for numpy.savetxt
 
@@ -81,15 +81,22 @@ def removeCorruptLines(inputFN, outputFN = 'output.xvg', headerLine = None, fail
     # invalid_raise means that if a line is found with the wrong number of entries then it will be ignored and a warning will be printed
     data = np.genfromtxt(inputFN, skip_header = headerLine, invalid_raise = False)
     
-    # Percent of data removed:
-    difLength = dataLength - len(data)
-    failing = int(fail * dataLength)
+    # Figure out how much data was removed:
+    try:
+        a = len(data[0])
+        difLength = dataLength - len(data)
+    except:
+        difLength = dataLength - 1    
+    failing = int(fail * dataLength/100.0)
+    print failing
 
+    # Print how many lines were removed or
+    # Throw an error if more than 'fail'% of data removed
     if difLength == 0:
         print "No corrupt lines found, no data was removed"
     elif difLength >= failing:
-        lenthError = Exception("%i corrupted lines of %i found, that is more than %.1f percent. Removal failed, you should examin your input files" % (difLength, dataLength, fail))
-        raise lengthError
+        DataRemovalError = Exception("%i corrupted lines of %i found, that is more than %.1f percent. Removal failed, you should examin your input files" % (difLength, dataLength, fail))
+        raise DataRemovalError
     else: # Lines removed, but less than warning limit
         print "%i corrupt lines of %i found and removed" % (difLength, dataLength) 
 
