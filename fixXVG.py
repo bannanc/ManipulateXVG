@@ -27,7 +27,7 @@ def findDataStart(lines, delin = ' '):
             continue
     return -1, lines, []
 
-def removeCorruptLines(inputFN, outputFN = 'output.xvg', headerLine = None, warn = 10.0, fail = 20.0):
+def removeCorruptLines(inputFN, outputFN = 'output.xvg', headerLine = None, fail = 20.0):
     """
     This method takes an .xvg file, removes any corrupted lines of data or data lines that are not sufficiently long. 
 
@@ -83,18 +83,15 @@ def removeCorruptLines(inputFN, outputFN = 'output.xvg', headerLine = None, warn
     
     # Percent of data removed:
     difLength = dataLength - len(data)
-    warning = int(warn * dataLength)
     failing = int(fail * dataLength)
 
     if difLength == 0:
         print "No corrupt lines found, no data was removed"
     elif difLength >= failing:
-        lenthError = Exception("%i corrupted lines found, that is more than %.1f percent. Removal failed, you should examin your input files" % (difLength, fail))
+        lenthError = Exception("%i corrupted lines of %i found, that is more than %.1f percent. Removal failed, you should examin your input files" % (difLength, dataLength, fail))
         raise lengthError
-    elif difLength >= warning:
-        print "WARNING: warning %i corrupted lines found and removed, which is more than the warning limit %.1f percent" % (difLength, warn)
     else: # Lines removed, but less than warning limit
-        print "%i corrupt lines found and removed" % difLength
+        print "%i corrupt lines of %i found and removed" % (difLength, dataLength) 
 
 
     # Use numpy savetxt to write data (with header) to the output file
