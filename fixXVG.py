@@ -154,9 +154,10 @@ def CombineXVG(input1, input2, output):
         i += 1
         # try so that if you get to the end of the second file it doesn't throw an error
         try:
-            startTime = float(datalines2[i].split(' ')[0])
-        except:
+            startTime = float(dataLines2[i].split(' ')[0])
+        except: # Reached the end with now new time! 
             concat = False
+            print "WARNING: No new time found in second XVG file! We recommend you check your files!"
 
     # combine data
     if concat:
