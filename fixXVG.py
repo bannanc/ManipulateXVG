@@ -87,6 +87,7 @@ def removeCorruptLines(inputFN, outputFN = 'output.xvg', headerLine = None, fail
         difLength = dataLength - len(data)
     except:
         difLength = dataLength - 1    
+        data = [data]
     failing = int(fail * dataLength/100.0)
     print failing
 
